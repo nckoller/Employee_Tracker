@@ -7,7 +7,8 @@ VALUES
     ("Warehouse"),
     ("Accounting"),
     ("Administration"),
-    ("Quality Assurance");
+    ("Quality Assurance"),
+    ("Management");
 
 INSERT INTO role
     (title, salary, department_id)
