@@ -1,6 +1,61 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 const connection = require("./database/connection");
+const cTable = require("console.table");
+
+function runUserMenu() {
+  inquirer
+    .prompt({
+      name: "menu",
+      type: "list",
+      message: "What would you like to do?",
+      choices: [
+        "View All Departments",
+        "View All Roles",
+        "View All Employees",
+        "Add New Department",
+        "Add New Role",
+        "Add New Employee",
+        "Update Employee Role",
+        "Exit",
+      ],
+    })
+    .then((answer) => {
+      switch (answer.menu) {
+        case "View All Departments":
+          viewDepartments();
+          break;
+
+        case "View All Roles":
+          viewAllRoles();
+          break;
+
+        case "View All Employees":
+          viewAllEmployees();
+          break;
+
+        case "Add New Department":
+          insertNewDept();
+          break;
+
+        case "Add New Role":
+          createNewRole();
+          break;
+
+        case "Add New Employee":
+          createNewEmployee();
+          break;
+
+        case "Update Employee Role":
+          updateEmployeeRole();
+          break;
+
+        case "Exit":
+          connection.end();
+          break;
+      }
+    });
+}
 
 // Adds a new department to the database
 function insertNewDept() {
@@ -25,8 +80,6 @@ function insertNewDept() {
       );
     });
 }
-
-// insertNewDept();
 
 // Creates new Role to add to database
 function createNewRole() {
@@ -82,22 +135,22 @@ function insertNewRole(answer) {
     {
       title: answer.title,
       salary: answer.salary,
-      departmentId: answer.departmentId,
+      department_id: answer.departmentId,
     },
     function (err) {
       if (err) throw err;
       console.log("The new role was created successfully.");
+      runUserMenu();
     }
   );
 }
 
-// createNewRole();
-
-// Add new employee
+// Builds arrays for Roles and Employee names/IDs
 function createNewEmployee() {
   let roleArr = [];
   let employeeArr = ["N/A"];
-  //Selects all role options from the database and puts them in an array
+
+  // Selects all role options from the database and puts them in an array
   connection.query("SELECT * FROM role", function (err, results) {
     if (err) throw err;
     for (let i = 0; i < results.length; i++) {
@@ -117,7 +170,6 @@ function createNewEmployee() {
         results[i].last_name;
       employeeArr.push(employeeRoster);
     }
-    // console.log(employeeArr);
   });
 
   inquirer
@@ -134,13 +186,13 @@ function createNewEmployee() {
       },
       {
         name: "roleID",
-        type: "rawlist",
+        type: "list",
         choices: roleArr,
         message: "What is this employee's role?",
       },
       {
         name: "managerID",
-        type: "rawlist",
+        type: "list",
         choices: employeeArr,
         message: "Who is the employee's manager? Select 'N/A' if none",
       },
@@ -171,11 +223,10 @@ function insertNewEmployee(newEmployee) {
     function (err) {
       if (err) throw err;
       console.log("The new employee was added successfully.");
+      runUserMenu();
     }
   );
 }
-
-createNewEmployee();
 
 // View all departments in the CLI
 function viewDepartments() {
@@ -183,16 +234,17 @@ function viewDepartments() {
   connection.query(query, function (err, results) {
     if (err) throw err;
     console.table(results);
-    // userMenu();
+    runUserMenu();
   });
 }
+
 // View all roles in the CLI
 function viewAllRoles() {
   let query = "SELECT * FROM role";
   connection.query(query, function (err, results) {
     if (err) throw err;
     console.table(results);
-    // userMenu();
+    runUserMenu();
   });
 }
 
@@ -203,12 +255,65 @@ function viewAllEmployees() {
   connection.query(query, function (err, results) {
     if (err) throw err;
     console.table(results);
-    // userMenu();
+    runUserMenu();
   });
 }
 
 // Update the role of an exisiting employee
 function updateEmployeeRole() {
   let employeeArr = [];
-  connection.query();
+  // Selects all the current employees in the database and puts them in an array
+  connection.query("SELECT * FROM employee", function (err, results) {
+    if (err) throw err;
+    for (let i = 0; i < results.length; i++) {
+      let employeeRoster =
+        results[i].id +
+        " " +
+        results[i].first_name +
+        " " +
+        results[i].last_name;
+      employeeArr.push(employeeRoster);
+    }
+    let roleArr = [];
+    // Selects all role options from the database and puts them in an array
+    connection.query("SELECT * FROM role", function (err, results) {
+      if (err) throw err;
+      for (let i = 0; i < results.length; i++) {
+        let roleChoices = results[i].id + " " + results[i].title;
+        roleArr.push(roleChoices);
+      }
+    });
+
+    inquirer
+      .prompt([
+        {
+          name: "employeeName",
+          type: "list",
+          choices: employeeArr,
+          message: "Which employee would you like to update?",
+        },
+        {
+          name: "newRole",
+          type: "list",
+          choices: roleArr,
+          message: "Select the new role",
+        },
+      ])
+      .then((answer) => {
+        const updateRole = {};
+        updateRole.employeeID = parseInt(answer.employeeName);
+        updateRole.roleID = parseInt(answer.newRole);
+
+        connection.query("UPDATE employee SET role_id = ? WHERE id = ?", [
+          updateRole.roleID,
+          updateRole.employeeID,
+        ]);
+        console.log("The employee's role was successfully updated.");
+        runUserMenu();
+      });
+  });
 }
+
+setTimeout(function () {
+  runUserMenu();
+}, 3000);
