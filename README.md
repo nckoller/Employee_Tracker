@@ -1,8 +1,10 @@
 # Employee_Tracker
 
+![](EmployeeTrackgif.gif)
+
 ## Demo Video
 
-<iframe src="https://drive.google.com/file/d/1WKQsZcAdrmydY0HYuznkeyeBtZdWpfyN/preview" width="640" height="480"></iframe>
+[Video Demonstration of Application](https://drive.google.com/file/d/1WKQsZcAdrmydY0HYuznkeyeBtZdWpfyN/view)
 
 ## Description
 
