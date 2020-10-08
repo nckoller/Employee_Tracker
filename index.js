@@ -76,6 +76,7 @@ function insertNewDept() {
         function (err) {
           if (err) throw err;
           console.log("Your department was created successfully!");
+          runUserMenu();
         }
       );
     });
@@ -314,6 +315,4 @@ function updateEmployeeRole() {
   });
 }
 
-setTimeout(function () {
-  runUserMenu();
-}, 3000);
+runUserMenu();

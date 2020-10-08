@@ -1,3 +1,4 @@
+// Set up mySQL as database storage
 const mysql = require("mysql");
 const { user, password } = require("./config");
 const connection = mysql.createConnection({
@@ -14,8 +15,5 @@ connection.connect(function (err) {
   if (err) throw err;
   //   console.log("connected as id " + connection.threadId + "\n");
 });
-// connection.connect();
-
-// console.log(connection);
 
 module.exports = connection;
