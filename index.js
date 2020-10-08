@@ -152,35 +152,63 @@ function createNewEmployee() {
       // If they answer N/A for manager, let managerID be NULL, otherwise selected integer of managerID
       newEmployee.managerID =
         answer.managerID === "N/A" ? null : parseInt(answer.managerID);
-      newEmployee.first_name = newEmployee.firstName;
-      newEmployee.last_name = newEmployee.lastName;
+      newEmployee.first_name = answer.firstName;
+      newEmployee.last_name = answer.lastName;
       insertNewEmployee(newEmployee);
     });
 }
 
-// function insertNewEmployee(newEmployee) {
-//   connection.query(
-//     "INSERT INTO employee SET ?",
-//     {
-//       first_name: newEmployee.firstName,
-//       last_name: newEmployee.lastName,
-//       role_id: newEmployee.roleID,
-//       manager_id: newEmployee.managerID,
-//     },
-//     function (err) {
-//       if (err) throw err;
-//       console.log("The new employee was added successfully.");
-//     }
-//   );
-// }
-// createNewEmployee();
-
-// View all departments
-function viewDepartments() {
-  connection.query;
+// Inserts new employee into the database table
+function insertNewEmployee(newEmployee) {
+  connection.query(
+    "INSERT INTO employee SET ?",
+    {
+      first_name: newEmployee.first_name,
+      last_name: newEmployee.last_name,
+      role_id: newEmployee.roleID,
+      manager_id: newEmployee.managerID,
+    },
+    function (err) {
+      if (err) throw err;
+      console.log("The new employee was added successfully.");
+    }
+  );
 }
-// View all roles
 
-// View all employees
+createNewEmployee();
 
-// Update employee roles
+// View all departments in the CLI
+function viewDepartments() {
+  let query = "SELECT * FROM department";
+  connection.query(query, function (err, results) {
+    if (err) throw err;
+    console.table(results);
+    // userMenu();
+  });
+}
+// View all roles in the CLI
+function viewAllRoles() {
+  let query = "SELECT * FROM role";
+  connection.query(query, function (err, results) {
+    if (err) throw err;
+    console.table(results);
+    // userMenu();
+  });
+}
+
+// View all employees in the CLI
+function viewAllEmployees() {
+  let query =
+    "SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary FROM employee, role WHERE role.id = employee.role_id";
+  connection.query(query, function (err, results) {
+    if (err) throw err;
+    console.table(results);
+    // userMenu();
+  });
+}
+
+// Update the role of an exisiting employee
+function updateEmployeeRole() {
+  let employeeArr = [];
+  connection.query();
+}
