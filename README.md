@@ -19,7 +19,7 @@ This application runs through the command line and allows you to view and manage
 
 ## Instructions
 
-First, make sure you have [Node.js](https://nodejs.org/en/) installed on your computer. Next, clone the repository to your computer. Once it's cloned, open the directory in your CLI and run "npm init" to create your package.json. Next, run "npm i" to install the dependencies. Following the "congig.js.example", create a "config.js" file in your database folder with your MySQL login information. Now you can run the application using "node index.js".
+First, make sure you have [Node.js](https://nodejs.org/en/) installed on your computer. Next, clone the repository to your computer. Once it's cloned, open the directory in your CLI and run "npm init" to create your package.json. Next, run "npm i" to install the dependencies. Following the "config.js.example", create a "config.js" file in your database folder with your MySQL login information. Now you can run the application using "node index.js".
 
 ## License
 
